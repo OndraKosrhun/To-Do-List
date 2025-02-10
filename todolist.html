@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://www.fai.org/sites/default/files/whatsapp_image_2024-09-25_at_10.22.07_91df720c_td.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            width: 300px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 5px;
+        }
+        .delete {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .delete:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>To-Do List</h1>
+    <div class="container">
+        <input type="text" id="taskInput" placeholder="Nový úkol...">
+        <button onclick="addTask()">Přidat</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", loadTasks);
+
+        function addTask() {
+            let taskInput = document.getElementById("taskInput");
+            let taskText = taskInput.value.trim();
+            if (taskText === "") return;
+
+            let taskList = document.getElementById("taskList");
+
+            let li = document.createElement("li");
+            li.textContent = taskText;
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "X";
+            deleteBtn.classList.add("delete");
+            deleteBtn.onclick = function () {
+                li.remove();
+                saveTasks();
+            };
+
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+            saveTasks();
+            taskInput.value = "";
+        }
+
+        function saveTasks() {
+            let tasks = [];
+            document.querySelectorAll("#taskList li").forEach(li => {
+                tasks.push(li.firstChild.textContent.trim());
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let taskList = document.getElementById("taskList");
+
+            savedTasks.forEach(task => {
+                let li = document.createElement("li");
+                li.textContent = task;
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "X";
+                deleteBtn.classList.add("delete");
+                deleteBtn.onclick = function () {
+                    li.remove();
+                    saveTasks();
+                };
+
+                li.appendChild(deleteBtn);
+                taskList.appendChild(li);
+            });
+        }
+    </script>
+
+</body>
+</html>
+
